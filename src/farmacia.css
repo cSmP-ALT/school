@@ -1,0 +1,80 @@
+:root{
+  --pistachio: #C7E9A3;
+  --pistachio-dark: #7FB66A;
+  --white: #ffffff;
+  --text: #1f2937;
+  --muted: #4b5563;
+}
+
+*{box-sizing:border-box}
+body{font-family:'Comic Sans MS', 'Comic Sans', cursive; margin:0; color:var(--text); background:var(--white)}
+
+/* Aplicar Comic Sans a encabezados y texto en general */
+h1, h2, h3, h4, h5, h6, p, a, li, span, div {
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+}
+
+.header{display:flex;justify-content:space-between;align-items:center;padding:20px 32px;background:linear-gradient(90deg,var(--white), var(--pistachio));border-bottom:1px solid #e6f1df}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:56px;height:56px;border-radius:10px;background:var(--pistachio-dark);display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:700;font-size:18px}
+.header h1{color:#000000}
+.brand h1{font-size:18px;margin:0;line-height:1.1;font-weight:700;color:#000000}
+.slogan{margin:0;font-size:14px;color:var(--muted)}
+.nav a{margin-left:18px;color:var(--text);text-decoration:none;font-weight:600}
+
+.hero{display:flex;gap:24px;align-items:center;justify-content:space-between;padding:48px 32px;background:linear-gradient(180deg,var(--pistachio) 0%, #f8fff4 100%)}
+.hero-text h2{margin:0 0 12px;font-size:28px;color:#000000}
+.hero-text p{margin:0 0 16px;color:var(--muted)}
+.btn{display:inline-block;padding:10px 16px;background:var(--pistachio-dark);color:var(--white);border-radius:8px;text-decoration:none;font-weight:600}
+.btn.ghost{background:transparent;border:2px solid var(--pistachio-dark);color:var(--pistachio-dark)}
+.hero-illus{width:140px;height:140px;display:flex;align-items:center;justify-content:center}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;padding:28px 32px}
+.service-card{background:var(--white);border-radius:16px;overflow:hidden;border:1px solid #e9f5e3;box-shadow:0 8px 24px rgba(90,132,57,0.08)}
+.service-card .card-image{width:100%;overflow:hidden}
+.service-card .card-image img{width:100%;height:200px;object-fit:cover;display:block}
+.service-card .card-content{padding:20px}
+.service-card h3{margin:0 0 10px}
+.service-card p{margin:0;color:var(--muted)}
+
+.service-card, .product-card{cursor:pointer}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:2000}
+.modal-content{background:var(--white);padding:20px;border-radius:12px;max-width:720px;width:94%;box-shadow:0 12px 40px rgba(0,0,0,0.2);position:relative}
+.modal-close{position:absolute;right:18px;top:12px;background:transparent;border:0;font-size:22px;cursor:pointer}
+.modal-actions{display:flex;gap:10px;margin-top:12px}
+.buy-section label{display:block;margin-top:8px}
+*** End Patch
+.productos{padding:28px 32px;background:#f7fff1}
+.productos h2{margin:0 0 18px;font-size:2rem;color:var(--text)}
+.productos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.product-card{background:var(--white);border-radius:16px;padding:20px;border:1px solid #e9f5e3;box-shadow:0 8px 24px rgba(90,132,57,0.06)}
+.product-card h4{margin:0 0 12px}
+.product-card ul{margin:0;padding-left:18px;color:var(--muted)}
+.product-card li{margin-bottom:8px}
+.product-card p{margin:0;color:var(--muted)}
+
+.contact{padding:28px 32px;background:#fbfff8;border-top:1px solid #e9f4df}
+.contact h3{margin:0 0 8px}
+
+.footer{padding:18px 32px;text-align:center;color:var(--muted);font-size:14px;border-top:1px solid #eef7ea}
+
+.cart-panel{position:fixed;top:120px;right:16px;width:260px;background:var(--white);border:1px solid #e0e4d5;border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,0.08);z-index:1000}
+.cart-panel h3{margin:0 0 12px}
+.cart-panel ul{margin:0;padding-left:0;list-style:none}
+.cart-panel li{margin-bottom:12px;color:var(--text)}
+.cart-item{display:grid;gap:8px}
+.cart-actions{display:flex;gap:8px;align-items:center}
+.cart-actions input{width:60px;padding:6px 8px;border:1px solid #d1dcc5;border-radius:8px}
+.cart-actions button{padding:6px 10px;font-size:0.9rem}
+
+@media (max-width:1024px){
+  .cart-panel{position:static;width:auto;margin:18px 32px 0}
+}
+
+@media (max-width:720px){
+  .hero{flex-direction:column;text-align:center}
+  .nav{display:none}
+  .header{padding:16px}
+}

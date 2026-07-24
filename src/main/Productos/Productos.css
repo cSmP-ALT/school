@@ -1,0 +1,46 @@
+.productos-page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.section-header h2 {
+  margin: 0 0 8px;
+}
+.section-header p {
+  margin: 0 0 20px;
+  color: #4f5b6b;
+}
+
+.productos-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-bottom: 20px;
+}
+
+.producto-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid #e5e9ef;
+  background: #fafbfc;
+  padding: 20px;
+  min-height: 240px;
+}
+
+.producto-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 130px;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.92);
+}
+
