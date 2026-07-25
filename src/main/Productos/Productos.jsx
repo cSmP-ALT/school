@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import './productos.css'
+import './Productos.css'
 
 const categorias = [
   {
