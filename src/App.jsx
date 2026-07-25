@@ -1,7 +1,7 @@
 // ...existing code...
 import React, { useState, useEffect } from 'react'
 import Contacto from './main/contacto/Contacto'
-import Servicios from './main/servicios/Servicios'
+import Servicios from './main/servicios/servicios'
 import Productos from './main/Productos/Productos'
 import Receta from './main/receta/receta'
 import './App.css'
