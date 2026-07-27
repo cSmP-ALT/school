@@ -1,4 +1,3 @@
-// ...existing code...
 import React, { useState, useEffect } from 'react'
 import Contacto from './main/contacto/Contacto'
 import Servicios from './main/servicios/Servicios'
@@ -37,7 +36,7 @@ function App() {
 
         <div className="home-cards">
           <article className="home-card">
-            <img src="/imagenes/doc.jpeg" alt="Servicios" />
+            <img src="./imagenes/doc.jpeg" alt="Servicios" />
             <div className="home-card-content">
               <h3>Servicios</h3>
               <p>Atención farmacéutica profesional y asesoría personalizada.</p>
@@ -46,7 +45,7 @@ function App() {
           </article>
 
           <article className="home-card">
-            <img src="/imagenes/vitaminas.jpeg" alt="Productos" />
+            <img src="./imagenes/vitaminas.jpeg" alt="Productos" />
             <div className="home-card-content">
               <h3>Productos</h3>
               <p>Encuentra medicamentos, vitaminas, higiene y más.</p>
@@ -55,7 +54,7 @@ function App() {
           </article>
 
           <article className="home-card">
-            <img src="/imagenes/logo.jpeg" alt="Contacto" />
+            <img src="./imagenes/logo.jpeg" alt="Contacto" />
             <div className="home-card-content">
               <h3>Contacto</h3>
               <p>Envía tu consulta y comunícate con nosotros rápidamente.</p>
@@ -64,7 +63,7 @@ function App() {
           </article>
 
           <article className="home-card">
-            <img src="/imagenes/receta.jpeg" alt="Receta" />
+            <img src="./imagenes/receta.jpeg" alt="Receta" />
             <div className="home-card-content">
               <h3>Receta</h3>
               <p>Sube tu receta médica y recibe tus medicamentos sin complicaciones.</p>
@@ -93,7 +92,7 @@ function App() {
           <button className="nav-link" onClick={() => navigate('/productos')}>Productos</button>
           <button className="nav-link" onClick={() => navigate('/contacto')}>Contacto</button>
           <button className="nav-link" onClick={() => navigate('/receta')}>Receta</button>
-        <button className="nav-link" onClick={() => navigate('/formulario')}>Menú</button>
+          <button className="nav-link" onClick={() => navigate('/formulario')}>Menú</button>
         </nav>
       </header>
 
