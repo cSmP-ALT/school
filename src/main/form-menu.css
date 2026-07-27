@@ -1,0 +1,89 @@
+.form-menu-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.section-header {
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  margin-bottom: 8px;
+  color: #1f8a53;
+}
+
+.form-menu-selector,
+.form-menu-description,
+.form-menu-field,
+.form-menu-actions {
+  margin-bottom: 18px;
+}
+
+.form-menu-selector label,
+.form-menu-field {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #145019;
+}
+
+.form-menu-selector select,
+.form-menu-field input,
+.form-menu-field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d7db;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-menu-field input:focus,
+.form-menu-field textarea:focus,
+.form-menu-selector select:focus {
+  border-color: #1f8a53;
+}
+
+.form-menu-field textarea {
+  min-height: 100px;
+}
+
+.form-menu-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.form-menu-status {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #f4fff3;
+  border: 1px solid #cde6d0;
+  color: #1f6b3d;
+  border-radius: 10px;
+}
+
+.form-menu-result {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 14px;
+  background: #fbfbfb;
+  border: 1px solid #e7e7e7;
+}
+
+.form-menu-result pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.btn.ghost {
+  background: #f5f5f5;
+  color: #1f8a53;
+}
+
+.btn.ghost:hover {
+  background: #e1e8e0;
+}

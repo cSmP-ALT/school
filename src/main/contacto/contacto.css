@@ -58,3 +58,289 @@
   background: #f6f7f8;
   color: #1f8a53;
 }
+@import "tailwindcss";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: white;
+}
+
+/* ============================= */
+/* HERO */
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-image: url("/img/fondo.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Overlay para legibilidad */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+/* ============================= */
+/* NAVBAR */
+.navbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 20px;
+  gap: 12px;
+}
+
+.logo {
+  text-align: center;
+}
+
+.logo h2 {
+  color: white;
+  font-size: 26px;
+  letter-spacing: 3px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.logo span {
+  color: #caa84c;
+  font-size: 10px;
+  letter-spacing: 5px;
+  display: block;
+  margin-top: -2px;
+}
+
+/* ============================= */
+/* BOTONES NAVBAR */
+.botones {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-login,
+.btn-register {
+  flex: 1;
+  padding: 12px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.3s;
+  text-align: center;
+  border-radius: 4px;
+  max-width: 160px;
+}
+
+.btn-login {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.btn-login:hover {
+  background: white;
+  color: black;
+}
+
+.btn-register {
+  background: #caa84c;
+  color: black;
+  border: none;
+  font-weight: bold;
+}
+
+.btn-register:hover {
+  background: #e0bc58;
+}
+
+/* ============================= */
+/* CONTENIDO PRINCIPAL */
+.contenido {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  padding: 20px 20px 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 120px);
+}
+
+.subtitulo {
+  color: #caa84c;
+  letter-spacing: 4px;
+  font-size: 10px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.contenido h1 {
+  color: white;
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+.contenido h1 span {
+  color: #caa84c;
+  display: inline-block;
+}
+
+.info-des {
+  color: #d2d2d2;
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 100%;
+  margin-bottom: 30px;
+  padding: 0 5px;
+}
+
+.info-des br {
+  display: none; /* Oculta los saltos de línea en móvil para mejor flujo */
+}
+
+/* ============================= */
+/* ACCIONES (BOTONES) */
+.acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.btn-servicios,
+.btn-crear {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: bold;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.btn-servicios {
+  background: #caa84c;
+  color: black;
+  border: none;
+}
+
+.btn-servicios:hover {
+  background: #e0bc58;
+  transform: scale(1.02);
+}
+
+.btn-crear {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-crear:hover {
+  background: white;
+  color: black;
+}
+
+a {
+  text-decoration: none;
+  width: 100%;
+  max-width: 320px;
+}
+
+/* ============================= */
+/* 🔥 AJUSTES PARA PANTALLAS MUY PEQUEÑAS (320px - 400px) */
+@media (max-width: 400px) {
+  .navbar {
+    padding: 12px 15px;
+    gap: 10px;
+  }
+
+  .logo h2 {
+    font-size: 22px;
+    letter-spacing: 2px;
+  }
+
+  .logo span {
+    font-size: 9px;
+    letter-spacing: 3px;
+  }
+
+  .btn-login,
+  .btn-register {
+    font-size: 11px;
+    padding: 10px 8px;
+    max-width: 130px;
+  }
+
+  .contenido {
+    padding: 15px;
+    min-height: calc(100vh - 100px);
+  }
+
+  .contenido h1 {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .subtitulo {
+    font-size: 9px;
+    letter-spacing: 3px;
+  }
+
+  .info-des {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .btn-servicios,
+  .btn-crear {
+    font-size: 13px;
+    padding: 12px 16px;
+  }
+
+  .acciones {
+    max-width: 280px;
+  }
+
+  a {
+    max-width: 280px;
+  }
+}
+
+/* ============================= */
+/* 📱 Ajustes para celulares con notch o barra de navegación */
+@supports (padding: max(0px)) {
+  .hero {
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+  }
+}
+
+/* ============================= */
+/* 🌙 Mejora de contraste en móvil (opcional) */
+@media (max-width: 768px) {
+  .overlay {
+    background: rgba(239, 238, 238, 0.7);
+  }
+}

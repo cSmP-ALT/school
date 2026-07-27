@@ -4,6 +4,7 @@ import Contacto from './main/contacto/Contacto'
 import Servicios from './main/servicios/Servicios'
 import Productos from './main/Productos/Productos'
 import Receta from './main/receta/receta'
+import FormMenu from './main/FormMenu'
 import './App.css'
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
     if (route === '/servicios') return <Servicios onNavigate={navigate} />
     if (route === '/productos') return <Productos onNavigate={navigate} />
     if (route === '/receta') return <Receta onNavigate={navigate} />
+    if (route === '/formulario') return <FormMenu selectedSection="clientes" onNavigate={navigate} />
 
     return (
       <section className="home-page">
@@ -91,6 +93,7 @@ function App() {
           <button className="nav-link" onClick={() => navigate('/productos')}>Productos</button>
           <button className="nav-link" onClick={() => navigate('/contacto')}>Contacto</button>
           <button className="nav-link" onClick={() => navigate('/receta')}>Receta</button>
+        <button className="nav-link" onClick={() => navigate('/formulario')}>Menú</button>
         </nav>
       </header>
 
