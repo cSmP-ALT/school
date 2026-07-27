@@ -1,3 +1,4 @@
+@import "tailwindcss";
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -141,7 +142,7 @@ body {
   background: #166c3d;
   transform: translateY(-1px);
 }
-@import "tailwindcss";
+
 
 * {
   margin: 0;
