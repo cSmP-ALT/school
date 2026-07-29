@@ -2,14 +2,22 @@ import express from 'express';
 import cors from 'cors';
 import conexion from './conexion.js';
 import jwt from 'jsonwebtoken';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3000;
-const SECRET_KEY = 'farmacia_secreta_2026';
+const PORT = process.env.PORT || 3000;
+const SECRET_KEY = process.env.SECRET_KEY || 'farmacia_secreta_2026';
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Servir archivos estáticos de Vite (producción)
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // ============================================
 // 🔐 RUTAS DE AUTENTICACIÓN (LOGIN Y REGISTRO)
@@ -40,7 +48,7 @@ app.post('/api/register', async (req, res) => {
     });
 });
 
-// Iniciar sesión (Login) - VERSIÓN CON TEXTO PLANO PARA PRUEBAS
+// Iniciar sesión (Login)
 app.post('/api/login', (req, res) => {
     const { correo, password } = req.body;
 
@@ -54,7 +62,6 @@ app.post('/api/login', (req, res) => {
 
         const usuario = resultados[0];
         
-        // COMPARACIÓN DIRECTA (TEXTO PLANO) - SOLO PARA PRUEBAS
         if (usuario.password !== password) {
             return res.status(401).json({ mensaje: 'Correo o contraseña incorrectos' });
         }
@@ -432,10 +439,10 @@ app.post('/api/proveedores', (req, res) => {
 });
 
 // ============================================
-// 🔍 RUTA DE PRUEBA
+// 🔍 RUTA DE PRUEBA DE API
 // ============================================
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
     res.json({ 
         mensaje: 'API de Farmacia Salud y Bienestar',
         version: '1.0.0',
@@ -453,10 +460,20 @@ app.get('/', (req, res) => {
 });
 
 // ============================================
+// ⚛️ RUTA CATCH-ALL PARA REACT (IMPORTANTE)
+//    DEBE SER LA ÚLTIMA RUTA
+// ============================================
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
+// ============================================
 // 🚀 INICIAR SERVIDOR
 // ============================================
 
-app.listen(PORT, () => {
-    console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`✅ Servidor corriendo en puerto ${PORT}`);
     console.log(`📊 Base de datos: farmacia_salud_bienestar`);
+    console.log(`📁 Sirviendo frontend desde: ${path.join(__dirname, 'dist')}`);
 });
