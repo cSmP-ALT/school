@@ -1,163 +1,171 @@
-import React, { useState } from 'react'
-import './productos.css'
+import React, { useState, useEffect } from 'react';
 
-const categorias = [
-  {
-    nombre: 'Medicamentos',
-    descripcion: 'Analgésicos, antivirales, tratamientos para resfriados y más.',
-    imagen: '/imagenes/medicina.jpg',
-    productos: [
-      { nombre: 'Analgésico rápido', precio: 400 },
-      { nombre: 'Jarabe para la tos', precio: 750 },
-      { nombre: 'Antibiótico oral', precio: 1200 }
-    ]
-  },
-  {
-    nombre: 'Belleza',
-    descripcion: 'Cremas, maquillaje y cuidado facial para todos los tipos de piel.',
-    imagen: '/imagenes/belleza.jpg',
-    productos: [
-      { nombre: 'Crema hidratante', precio: 950 },
-      { nombre: 'Suero facial', precio: 1350 },
-      { nombre: 'Base ligera', precio: 680 }
-    ]
-  },
-  {
-    nombre: 'Higiene',
-    descripcion: 'Jabones, desodorantes, pasta dental y productos esenciales.',
-    imagen: '/imagenes/higiene.jpg',
-    productos: [
-      { nombre: 'Gel antibacterial', precio: 320 },
-      { nombre: 'Pasta dental', precio: 450 },
-      { nombre: 'Shampoo anticaspa', precio: 780 }
-    ]
-  },
-  {
-    nombre: 'Bebés',
-    descripcion: 'Pañales, toallitas, cremas y productos suaves para los más pequeños.',
-    imagen: '/imagenes/bb.jpg',
-    productos: [
-      { nombre: 'Pañales talla M', precio: 1100 },
-      { nombre: 'Toallitas húmedas', precio: 620 },
-      { nombre: 'Champú para bebés', precio: 520 }
-    ]
-  },
-  {
-    nombre: 'Vitaminas',
-    descripcion: 'Suplementos para energía, defensas y salud diaria.',
-    imagen: '/imagenes/vitaminas.jpg',
-    productos: [
-      { nombre: 'Vitamina C', precio: 700 },
-      { nombre: 'Omega 3', precio: 1100 },
-      { nombre: 'Multivitamínico', precio: 1450 }
-    ]
-  },
-  {
-    nombre: 'Ofertas',
-    descripcion: 'Promociones especiales en productos seleccionados.',
-    imagen: '/imagenes/ofertas.jpg',
-    productos: [
-      { nombre: 'Pack de analgésicos', precio: 1200 },
-      { nombre: 'Desodorante en promoción', precio: 900 },
-      { nombre: 'Crema hidratante oferta', precio: 1400 }
-    ]
-  }
-]
+const Productos = ({ onNavigate }) => {
+  const [productos, setProductos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState({
+    nombre: '',
+    descripcion: '',
+    precio: '',
+    stock: '',
+    categoria: ''
+  });
+  const [mensaje, setMensaje] = useState('');
 
-function Productos({ onNavigate }) {
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null)
-  const [cantidades, setCantidades] = useState({})
-  const [mensaje, setMensaje] = useState('')
+  // Cargar productos al iniciar
+  useEffect(() => {
+    cargarProductos();
+  }, []);
 
-  const abrirCategoria = (categoria) => {
-    setCategoriaSeleccionada(categoria)
-    setCantidades({})
-    setMensaje('')
-  }
+  const cargarProductos = async () => {
+    try {
+      const response = await fetch('http://localhost:3003/api/productos');
+      const data = await response.json();
+      setProductos(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error al cargar productos:', error);
+      setLoading(false);
+    }
+  };
 
-  const manejarCantidad = (producto, valor) => {
-    const qty = Math.max(1, Math.min(20, Number(valor) || 1))
-    setCantidades((prev) => ({ ...prev, [producto]: qty }))
-  }
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
-  const agregarProducto = (producto) => {
-    const qty = cantidades[producto.nombre] || 1
-    setMensaje(`Seleccionaste ${qty} unidad(es) de ${producto.nombre} por $${producto.precio} c/u.`)
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMensaje('');
+
+    try {
+      const response = await fetch('http://localhost:3003/api/productos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          precio: parseFloat(formData.precio),
+          stock: parseInt(formData.stock)
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMensaje('✅ Producto creado exitosamente');
+        setFormData({ nombre: '', descripcion: '', precio: '', stock: '', categoria: '' });
+        cargarProductos(); // Recargar la lista
+      } else {
+        setMensaje('❌ Error: ' + data.error);
+      }
+    } catch (error) {
+      setMensaje('❌ Error de conexión con el servidor');
+      console.error('Error:', error);
+    }
+  };
+
+  if (loading) return <div>Cargando productos...</div>;
 
   return (
     <section className="productos-page">
-      <div className="section-header">
-        <h2>Productos</h2>
-        <p>Elige la categoría que más te interese.</p>
+      <h2>Productos</h2>
+
+      {mensaje && <div className={mensaje.includes('✅') ? 'mensaje-exito' : 'mensaje-error'}>{mensaje}</div>}
+
+      <h3>Agregar nuevo producto</h3>
+      <form onSubmit={handleSubmit} className="producto-form">
+        <div className="form-group">
+          <input
+            type="text"
+            name="nombre"
+            value={formData.nombre}
+            onChange={handleChange}
+            placeholder="Nombre del producto"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            name="descripcion"
+            value={formData.descripcion}
+            onChange={handleChange}
+            placeholder="Descripción"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="number"
+            name="precio"
+            value={formData.precio}
+            onChange={handleChange}
+            placeholder="Precio"
+            step="0.01"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="number"
+            name="stock"
+            value={formData.stock}
+            onChange={handleChange}
+            placeholder="Stock"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            name="categoria"
+            value={formData.categoria}
+            onChange={handleChange}
+            placeholder="Categoría"
+          />
+        </div>
+        <button type="submit" className="btn">Agregar producto</button>
+      </form>
+
+      <h3>Lista de productos</h3>
+      <div className="productos-lista">
+        {productos.length === 0 ? (
+          <p>No hay productos registrados</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Categoría</th>
+              </tr>
+            </thead>
+            <tbody>
+              {productos.map(producto => (
+                <tr key={producto.id}>
+                  <td>{producto.nombre}</td>
+                  <td>{producto.descripcion}</td>
+                  <td>${producto.precio}</td>
+                  <td>{producto.stock}</td>
+                  <td>{producto.categoria}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
-      {!categoriaSeleccionada ? (
-        <div className="productos-grid">
-          {categorias.map((categoria) => (
-            <article
-              key={categoria.nombre}
-              className="producto-card"
-              onClick={() => abrirCategoria(categoria)}
-            >
-              <img
-                className="categoria-image"
-                src={categoria.imagen}
-                alt={categoria.nombre}
-              />
-              <div className="producto-card-content">
-                <h3>{categoria.nombre}</h3>
-                <p>{categoria.descripcion}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      ) : (
-        <div className="categoria-detalle">
-          <button className="btn ghost" onClick={() => setCategoriaSeleccionada(null)}>
-            ← Volver a categorías
-          </button>
-
-          <div className="categoria-header">
-            <h3>{categoriaSeleccionada.nombre}</h3>
-            <p>{categoriaSeleccionada.descripcion}</p>
-          </div>
-
-          <div className="productos-detalle-grid">
-            {categoriaSeleccionada.productos
-              .filter((producto) => producto.precio >= 200 && producto.precio <= 1500)
-              .map((producto) => (
-                <article key={producto.nombre} className="producto-detalle-card">
-                  <div>
-                    <h4>{producto.nombre}</h4>
-                    <p>Precio: ${producto.precio}</p>
-                  </div>
-                  <div className="producto-cantidad">
-                    <label>
-                      Cantidad
-                      <input
-                        type="number"
-                        min="1"
-                        max="20"
-                        value={cantidades[producto.nombre] || 1}
-                        onChange={(e) => manejarCantidad(producto.nombre, e.target.value)}
-                      />
-                    </label>
-                    <button className="btn" onClick={() => agregarProducto(producto)}>
-                      Seleccionar
-                    </button>
-                  </div>
-                </article>
-              ))}
-          </div>
-
-          {mensaje && <p className="productos-mensaje">{mensaje}</p>}
-        </div>
-      )}
-
-      <button className="btn" onClick={() => onNavigate('/')}>Volver al inicio</button>
+      <button className="btn-volver" onClick={() => onNavigate('/')}>
+        Volver al inicio
+      </button>
     </section>
-  )
-}
+  );
+};
 
-export default Productos
+export default Productos;

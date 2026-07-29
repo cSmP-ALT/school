@@ -1,105 +1,112 @@
-import React, { useState } from 'react'
-import './contacto.css'
+import React, { useState } from 'react';
 
-function Contacto({ onNavigate }) {
-  const [form, setForm] = useState({
-    nombre: '',
-    email: '',
-    asunto: '',
-    mensaje: ''
-  })
-  const [status, setStatus] = useState('')
+const Contacto = ({ onNavigate }) => {
+  const [formData, setFormData] = useState({
+    nombre_remitente: '',  // ✅ Nombre correcto según BD
+    correo: '',            // ✅ Nombre correcto según BD
+    mensaje: ''            // ✅ Nombre correcto según BD
+  });
+  const [loading, setLoading] = useState(false);
+  const [mensajeExito, setMensajeExito] = useState('');
+  const [error, setError] = useState('');
 
-  const handleChange = (event) => {
-    const { name, value } = event.target
-    setForm((prev) => ({ ...prev, [name]: value }))
-  }
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    if (!form.nombre || !form.email || !form.asunto || !form.mensaje) {
-      setStatus('Por favor, completa todos los campos.')
-      return
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setMensajeExito('');
+
+    try {
+      const response = await fetch('http://localhost:3003/api/mensajes-contacto', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nombre_remitente: formData.nombre_remitente,  // ✅ Campo correcto
+          correo: formData.correo,                      // ✅ Campo correcto
+          mensaje: formData.mensaje                     // ✅ Campo correcto
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMensajeExito('✅ ¡Mensaje enviado exitosamente!');
+        setFormData({ nombre_remitente: '', correo: '', mensaje: '' });
+      } else {
+        setError('❌ Error: ' + data.error);
+      }
+    } catch (error) {
+      setError('❌ Error de conexión con el servidor');
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
     }
-
-    setStatus('Gracias por tu mensaje. Te responderemos pronto.')
-    setForm({ nombre: '', email: '', asunto: '', mensaje: '' })
-  }
+  };
 
   return (
     <section className="contacto-page">
-      <div className="section-header">
-        <h2>Contacto</h2>
-        <p>Envía tu consulta y te responderemos lo antes posible.</p>
-      </div>
+      <h2>Contacto</h2>
+      <p>Completa el formulario y te responderemos a la brevedad.</p>
 
-      <form className="contacto-form" onSubmit={handleSubmit}>
-        <label htmlFor="nombre">Nombre</label>
-        <input
-          id="nombre"
-          name="nombre"
-          type="text"
-          value={form.nombre}
-          onChange={handleChange}
-          required
-        />
+      {mensajeExito && <div className="mensaje-exito">{mensajeExito}</div>}
+      {error && <div className="mensaje-error">{error}</div>}
 
-        <label htmlFor="email">Correo electrónico</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
-
-        <label htmlFor="asunto">Asunto</label>
-        <select
-          id="asunto"
-          name="asunto"
-          value={form.asunto}
-          onChange={handleChange}
-          required
-        >
-          <option value="">— Selecciona un asunto —</option>
-          <option value="consulta">Consulta general</option>
-          <option value="pedido">Pedido</option>
-          <option value="reclamo">Reclamo</option>
-          <option value="sugerencia">Sugerencia</option>
-          <option value="otro">Otro</option>
-        </select>
-
-        <label htmlFor="mensaje">Mensaje</label>
-        <textarea
-          id="mensaje"
-          name="mensaje"
-          rows="5"
-          value={form.mensaje}
-          onChange={handleChange}
-          required
-        />
-
-        <div className="contacto-buttons">
-          <button className="btn" type="submit">Enviar</button>
-          <button className="btn ghost" type="button" onClick={() => onNavigate('/')}>
-            Volver al inicio
-          </button>
+      <form onSubmit={handleSubmit} className="contacto-form">
+        <div className="form-group">
+          <label>Nombre completo:</label>
+          <input
+            type="text"
+            name="nombre_remitente"  // ✅ Campo correcto
+            value={formData.nombre_remitente}
+            onChange={handleChange}
+            required
+            placeholder="Tu nombre"
+          />
         </div>
 
-        {status && <p className="contacto-status">{status}</p>}
+        <div className="form-group">
+          <label>Correo electrónico:</label>
+          <input
+            type="email"
+            name="correo"           // ✅ Campo correcto
+            value={formData.correo}
+            onChange={handleChange}
+            required
+            placeholder="tu@email.com"
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Mensaje:</label>
+          <textarea
+            name="mensaje"          // ✅ Campo correcto
+            value={formData.mensaje}
+            onChange={handleChange}
+            required
+            rows="5"
+            placeholder="Escribe tu mensaje..."
+          />
+        </div>
+
+        <button type="submit" className="btn" disabled={loading}>
+          {loading ? 'Enviando...' : 'Enviar mensaje'}
+        </button>
       </form>
 
-      <footer className="contacto-footer">
-        <div className="contacto-info">
-        <p><strong>Dirección:</strong> Camino Real Norte, Municipio de Nicolas Romero</p>
-          <p><strong>Teléfono:</strong> +56 5549087860</p>
-          <p><strong>Correo:</strong> santiaguinomorales@gmail.com</p>
-          <p><strong>Horario de atención:</strong> Lun-Vie 09:00 - 20:00 · Sáb 09:00 - 14:00 · Domingo cerrado</p>
-        </div>
-      </footer>
+      <button className="btn-volver" onClick={() => onNavigate('/')}>
+        Volver al inicio
+      </button>
     </section>
-  )
-}
+  );
+};
 
-export default Contacto
+export default Contacto;

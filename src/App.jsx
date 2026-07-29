@@ -8,6 +8,22 @@ import './App.css'
 
 function App() {
   const [route, setRoute] = useState(window.location.pathname)
+  
+  // Estados para el login
+  const [correo, setCorreo] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [mensaje, setMensaje] = useState('')
+  const [usuarioLogueado, setUsuarioLogueado] = useState(null)
+
+  // Verificar si hay sesión guardada al cargar
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    const usuario = localStorage.getItem('usuario')
+    if (token && usuario) {
+      setUsuarioLogueado(JSON.parse(usuario))
+    }
+  }, [])
 
   useEffect(() => {
     const handlePopState = () => setRoute(window.location.pathname)
@@ -22,6 +38,67 @@ function App() {
     }
   }
 
+  // ============================================
+  // 🔐 FUNCIÓN PARA INICIAR SESIÓN
+  // ============================================
+  
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setMensaje('')
+
+    try {
+      console.log('Intentando login...');
+      const response = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          correo: correo,
+          password: password
+        })
+      });
+      
+      const data = await response.json();
+      console.log('✅ Respuesta:', data);
+      
+      if (response.ok) {
+        setMensaje('✅ Login exitoso!')
+        setUsuarioLogueado(data.usuario)
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('usuario', JSON.stringify(data.usuario))
+        alert('✅ Login exitoso! Bienvenido ' + data.usuario.nombre)
+        setCorreo('')
+        setPassword('')
+      } else {
+        setMensaje('❌ Error: ' + data.mensaje)
+        alert('❌ Error: ' + data.mensaje)
+      }
+    } catch (error) {
+      console.error('❌ Error:', error);
+      setMensaje('❌ Error de conexión. ¿El servidor está corriendo?')
+      alert('❌ Error de conexión. ¿El servidor está corriendo en el puerto 3000?')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // ============================================
+  // 🔐 FUNCIÓN PARA CERRAR SESIÓN
+  // ============================================
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('usuario')
+    setUsuarioLogueado(null)
+    setMensaje('Sesión cerrada')
+    alert('Sesión cerrada correctamente')
+  }
+
+  // ============================================
+  // 🎨 RENDERIZAR PÁGINA
+  // ============================================
+
   const renderPage = () => {
     if (route === '/contacto') return <Contacto onNavigate={navigate} />
     if (route === '/servicios') return <Servicios onNavigate={navigate} />
@@ -34,6 +111,117 @@ function App() {
         <h2>Bienvenido a Farmacia Comandiu</h2>
         <p>Elige una sección para saber más sobre nuestros servicios, productos y contacto.</p>
 
+        {/* ============================================ */}
+        {/* 🔐 FORMULARIO DE LOGIN */}
+        {/* ============================================ */}
+        <div style={{
+          maxWidth: '400px',
+          margin: '20px auto',
+          padding: '20px',
+          border: '1px solid #ddd',
+          borderRadius: '8px',
+          backgroundColor: '#f9f9f9'
+        }}>
+          <h3 style={{ marginTop: 0 }}>Iniciar Sesión</h3>
+          
+          {mensaje && (
+            <div style={{
+              padding: '10px',
+              marginBottom: '10px',
+              backgroundColor: mensaje.includes('✅') ? '#d4edda' : '#f8d7da',
+              color: mensaje.includes('✅') ? '#155724' : '#721c24',
+              borderRadius: '4px',
+              border: '1px solid ' + (mensaje.includes('✅') ? '#c3e6cb' : '#f5c6cb')
+            }}>
+              {mensaje}
+            </div>
+          )}
+
+          {usuarioLogueado ? (
+            <div>
+              <p style={{ color: 'green' }}>✅ Conectado como: <strong>{usuarioLogueado.nombre}</strong></p>
+              <p>Rol: {usuarioLogueado.rol}</p>
+              <button
+                onClick={handleLogout}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#dc3545',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer'
+                }}
+              >
+                Cerrar Sesión
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleLogin}>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Correo electrónico:
+                </label>
+                <input
+                  type="email"
+                  value={correo}
+                  onChange={(e) => setCorreo(e.target.value)}
+                  required
+                  placeholder="admin@farmacia.com"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    fontSize: '16px',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Contraseña:
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="admin123"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    fontSize: '16px',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  backgroundColor: loading ? '#6c757d' : '#28a745',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  fontSize: '16px'
+                }}
+              >
+                {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+              </button>
+            </form>
+          )}
+        </div>
+
+        {/* ============================================ */}
+        {/* 📋 CARDS DE LA PÁGINA PRINCIPAL */}
+        {/* ============================================ */}
         <div className="home-cards">
           <article className="home-card">
             <img src="./imagenes/doc.jpeg" alt="Servicios" />
@@ -93,6 +281,11 @@ function App() {
           <button className="nav-link" onClick={() => navigate('/contacto')}>Contacto</button>
           <button className="nav-link" onClick={() => navigate('/receta')}>Receta</button>
           <button className="nav-link" onClick={() => navigate('/formulario')}>Menú</button>
+          {usuarioLogueado && (
+            <span style={{ color: 'white', marginLeft: '15px', fontWeight: 'bold' }}>
+              👤 {usuarioLogueado.nombre}
+            </span>
+          )}
         </nav>
       </header>
 
